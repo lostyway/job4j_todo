@@ -1,10 +1,22 @@
 <!DOCTYPE html>
-<html lang="en">
+<html xmlns:th="http://www.thymeleaf.org">
 <head>
-  <meta charset="UTF-8">
-  <title>$Title$</title>
+    <title>Добавить задание</title>
+    <meta charset="UTF-8">
+    <link rel="stylesheet" href="/css/bootstrap.min.css">
 </head>
 <body>
-$END$
+<div class="container mt-4">
+    <h1>Добавить задание</h1>
+
+    <form th:action="@{/tasks/save}" th:object="${task}" method="post">
+        <div class="mb-3">
+            <label for="description" class="form-label">Описание</label>
+            <input type="text" class="form-control" id="description" th:field="*{description}" required/>
+        </div>
+        <button type="submit" class="btn btn-primary">Создать</button>
+        <a th:href="@{/tasks}" class="btn btn-secondary">Отмена</a>
+    </form>
+</div>
 </body>
 </html>

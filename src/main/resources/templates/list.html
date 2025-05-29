@@ -1,10 +1,37 @@
 <!DOCTYPE html>
-<html lang="en">
+<html xmlns:th="http://www.thymeleaf.org">
 <head>
-  <meta charset="UTF-8">
-  <title>$Title$</title>
+    <title>Список заданий</title>
+    <meta charset="UTF-8">
+    <link rel="stylesheet" href="/css/bootstrap.min.css">
 </head>
 <body>
-$END$
+<div class="container mt-4">
+    <h1>Список заданий</h1>
+
+    <div class="mb-3">
+        <a class="btn btn-primary" th:href="@{/tasks/create}">Добавить задание</a>
+        <a class="btn btn-secondary" th:href="@{/tasks}">Все</a>
+        <a class="btn btn-secondary" th:href="@{/tasks?filter=done}">Выполненные</a>
+        <a class="btn btn-secondary" th:href="@{/tasks?filter=new}">Новые</a>
+    </div>
+
+    <table class="table table-bordered">
+        <thead>
+        <tr>
+            <th>Описание</th>
+            <th>Дата создания</th>
+            <th>Состояние</th>
+        </tr>
+        </thead>
+        <tbody>
+        <tr th:each="task : ${tasks}" th:onclick="|window.location='/tasks/${task.id}'|" style="cursor:pointer;">
+            <td th:text="${task.description}">Описание</td>
+            <td th:text="${#temporals.format(task.created, 'dd-MM-yyyy HH:mm')}">Дата</td>
+            <td th:text="${task.completed ? 'Выполнено' : 'Новое'}">Статус</td>
+        </tr>
+        </tbody>
+    </table>
+</div>
 </body>
 </html>

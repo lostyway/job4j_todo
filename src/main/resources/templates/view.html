@@ -1,10 +1,27 @@
 <!DOCTYPE html>
-<html lang="en">
+<html xmlns:th="http://www.thymeleaf.org">
 <head>
-  <meta charset="UTF-8">
-  <title>$Title$</title>
+    <title>Задание</title>
+    <meta charset="UTF-8">
+    <link rel="stylesheet" href="/css/bootstrap.min.css">
 </head>
 <body>
-$END$
+<div class="container mt-4">
+    <h1>Задание</h1>
+
+    <p><strong>Описание:</strong> <span th:text="${task.description}">Описание</span></p>
+    <p><strong>Создано:</strong> <span th:text="${#temporals.format(task.created, 'dd-MM-yyyy HH:mm')}">Дата</span></p>
+    <p><strong>Состояние:</strong> <span th:text="${task.completed ? 'Выполнено' : 'Новое'}">Статус</span></p>
+
+    <div class="btn-group">
+        <form th:action="@{|/tasks/${task.id}/done|}" method="post">
+            <button type="submit" class="btn btn-success" th:disabled="${task.completed}">Выполнено</button>
+        </form>
+        <a class="btn btn-warning" th:href="@{|/tasks/${task.id}/edit|}">Редактировать</a>
+        <form th:action="@{|/tasks/${task.id}/delete|}" method="post" style="display:inline;">
+            <button type="submit" class="btn btn-danger">Удалить</button>
+        </form>
+    </div>
+</div>
 </body>
 </html>
