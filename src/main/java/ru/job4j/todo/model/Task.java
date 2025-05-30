@@ -16,5 +16,13 @@ public class Task {
     private String description;
 
     @Column(name = "done")
-    private boolean completed;
+    private Boolean completed;
+
+    @Column(updatable = false)
+    private LocalDateTime created;
+
+    @PrePersist
+    protected void onCreate() {
+        created = LocalDateTime.now();
+    }
 }
