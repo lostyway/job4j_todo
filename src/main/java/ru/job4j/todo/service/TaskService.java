@@ -16,22 +16,26 @@ public class TaskService implements ITaskService {
 
     @Override
     public Task createTask(Task task) {
-        valudateTask(task);
+        validateTask(task);
         return taskRepository.addNewTask(task)
                 .orElseThrow(() -> new TaskUpdateException("Не удалось сохранить задачу"));
     }
 
     @Override
     public Task updateTask(Task task) {
-        valudateTask(task);
+        validateTask(task);
         return taskRepository.updateTask(task)
                 .orElseThrow(() -> new TaskUpdateException("Не удалось обновить задачу"));
     }
 
     @Override
     public boolean deleteTask(Task task) {
-        valudateTask(task);
-        return taskRepository.deleteTask(task);
+        validateTask(task);
+        boolean isDeleted = taskRepository.deleteTask(task);
+        if (!isDeleted) {
+            throw new TaskNotFoundException("Не удалось удалить задачу");
+        }
+        return true;
     }
 
     @Override
@@ -50,7 +54,7 @@ public class TaskService implements ITaskService {
                 .orElseThrow(() -> new TaskNotFoundException("Задача с id: " + id + " не была найдена!"));
     }
 
-    private void valudateTask(Task task) {
+    private void validateTask(Task task) {
         if (task == null) {
             throw new IllegalArgumentException("Не удалось создать задачу. Она пуста");
         }
