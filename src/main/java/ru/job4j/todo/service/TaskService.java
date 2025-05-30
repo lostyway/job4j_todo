@@ -41,7 +41,7 @@ public class TaskService implements ITaskService {
 
     @Override
     public List<Task> getTaskByCompleted(Boolean completed) {
-        return taskRepository.getTaskByCompleted(completed);
+        return taskRepository.getAllTaskByCompletable(completed);
     }
 
     @Override

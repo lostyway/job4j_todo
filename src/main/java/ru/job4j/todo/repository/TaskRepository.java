@@ -10,7 +10,6 @@ import ru.job4j.todo.model.Task;
 
 import java.util.List;
 import java.util.Optional;
-import java.util.function.Consumer;
 import java.util.function.Function;
 
 @Slf4j
@@ -69,26 +68,11 @@ public class TaskRepository implements ITaskRepository {
     }
 
     @Override
-    public List<Task> getTaskByCompleted(Boolean completed) {
+    public List<Task> getAllTaskByCompletable(Boolean completed) {
         return txResult(session ->
                 session.createQuery("from Task where completed = :completed order by created desc", Task.class)
                         .setParameter("completed", completed)
                         .list());
-    }
-
-    private void txRun(Consumer<Session> command) {
-        Transaction tx = null;
-        try (Session session = sf.openSession()) {
-            tx = session.beginTransaction();
-            command.accept(session);
-            tx.commit();
-        } catch (Exception e) {
-            log.error("Ошибка при работе с транзакцией", e);
-            if (tx != null && tx.isActive()) {
-                tx.rollback();
-            }
-            throw new RuntimeException(e);
-        }
     }
 
     private <T> T txResult(Function<Session, T> command) {

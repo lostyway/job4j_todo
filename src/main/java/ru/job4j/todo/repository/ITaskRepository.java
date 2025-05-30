@@ -11,5 +11,5 @@ public interface ITaskRepository {
     boolean deleteTask(Task task);
     Optional<Task> getTaskById(int id);
     List<Task> getAllTasks();
-    List<Task> getTaskByCompleted(Boolean completed);
+    List<Task> getAllTaskByCompletable(Boolean completed);
 }
