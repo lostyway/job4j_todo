@@ -64,6 +64,13 @@ java -jar target/todo-1.0.jar
 
 📸 Скриншоты
 
+Окно входа
+![изображение](https://github.com/user-attachments/assets/b8fc4438-5a1c-44b6-ae8e-2d4599af7186)
+
+Окно регистрации
+![изображение](https://github.com/user-attachments/assets/666c250e-633c-406b-a907-f7c0d0ad0e51)
+
+
 Главная страница
   ![изображение](https://github.com/user-attachments/assets/dc02bbbb-e4d7-43b8-a53a-b8601a49f684)
 
