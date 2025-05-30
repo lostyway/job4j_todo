@@ -14,13 +14,14 @@
     <p><strong>Состояние:</strong> <span th:text="${task.completed ? 'Выполнено' : 'Новое'}">Статус</span></p>
 
     <div class="btn-group">
-        <form th:action="@{|/tasks/${task.id}/done|}" method="post">
+        <form th:action="@{|/tasks/done/${task.id}|}" method="post">
             <button type="submit" class="btn btn-success" th:disabled="${task.completed}">Выполнено</button>
         </form>
-        <a class="btn btn-warning" th:href="@{|/tasks/${task.id}/edit|}">Редактировать</a>
-        <form th:action="@{|/tasks/${task.id}/delete|}" method="post" style="display:inline;">
+        <a class="btn btn-warning" th:href="@{|/tasks/edit/${task.id}|}">Редактировать</a>
+        <form th:action="@{|/tasks/delete/${task.id}|}" method="post" style="display:inline;">
             <button type="submit" class="btn btn-danger">Удалить</button>
         </form>
+        <a th:href="@{'/tasks'}" class="btn btn-sm btn-info">Назад</a>
     </div>
 </div>
 </body>

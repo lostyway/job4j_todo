@@ -1,21 +1,26 @@
 <!DOCTYPE html>
 <html xmlns:th="http://www.thymeleaf.org">
 <head>
-    <title>Добавить задание</title>
+    <title>Редактировать задание</title>
     <meta charset="UTF-8">
     <link rel="stylesheet" href="/css/bootstrap.min.css">
 </head>
 <body>
 <div class="container mt-4">
-    <h1>Добавить задание</h1>
+    <h1>Редактировать задание</h1>
 
-    <form th:action="@{/tasks/save}" th:object="${task}" method="post">
-        <div class="mb-3">
-            <label for="description" class="form-label">Описание</label>
-            <input type="text" class="form-control" id="description" th:field="*{description}" required/>
+    <form th:action="@{/tasks/update}" th:object="${task}" method="post">
+        <input type="hidden" th:field="*{id}"/>
+        <div class="form-group">
+            <label>Описание</label>
+            <input type="text" th:field="*{description}" required class="form-control"/>
         </div>
-        <button type="submit" class="btn btn-primary">Создать</button>
-        <a th:href="@{/tasks}" class="btn btn-secondary">Отмена</a>
+        <div class="form-group form-check mt-2">
+            <input type="checkbox" th:field="*{completed}" class="form-check-input"/>
+            <label class="form-check-label">Выполнено</label>
+        </div>
+        <button type="submit" class="btn btn-primary mt-3">Сохранить</button>
+        <a th:href="@{/tasks}" class="btn btn-secondary mt-3">Отмена</a>
     </form>
 </div>
 </body>

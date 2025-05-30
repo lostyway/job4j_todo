@@ -8,7 +8,7 @@
 <body>
 <div class="container mt-4">
     <h2>Добавить задачу</h2>
-    <form th:action="@{/add}" method="post" th:object="${task}">
+    <form th:action="@{/tasks/add}" method="post" th:object="${task}">
         <div class="mb-3">
             <label for="description" class="form-label">Описание</label>
             <input type="text" class="form-control" id="description" name="description" th:field="*{description}" required>

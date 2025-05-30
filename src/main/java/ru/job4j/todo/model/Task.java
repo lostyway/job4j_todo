@@ -29,10 +29,17 @@ public class Task {
     @PrePersist
     protected void onCreate() {
         created = LocalDateTime.now();
+        if (completed == null) {
+            completed = false;
+        }
     }
 
     public Task(String description, Boolean completed) {
         this.description = description;
         this.completed = completed;
+    }
+
+    public Task(String description) {
+        this.description = description;
     }
 }

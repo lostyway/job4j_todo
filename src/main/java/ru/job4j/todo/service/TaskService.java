@@ -55,7 +55,7 @@ public class TaskService implements ITaskService {
     }
 
     private void validateTask(Task task) {
-        if (task == null) {
+        if (task == null || task.getDescription().isEmpty()) {
             throw new IllegalArgumentException("Не удалось создать задачу. Она пуста");
         }
     }
