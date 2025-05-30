@@ -5,14 +5,14 @@ import org.springframework.stereotype.Service;
 import ru.job4j.todo.exception.TaskNotFoundException;
 import ru.job4j.todo.exception.TaskUpdateException;
 import ru.job4j.todo.model.Task;
-import ru.job4j.todo.repository.ITaskRepository;
+import ru.job4j.todo.store.ITaskStore;
 
 import java.util.List;
 
 @Service
 @AllArgsConstructor
 public class TaskService implements ITaskService {
-    private final ITaskRepository taskRepository;
+    private final ITaskStore taskRepository;
 
     @Override
     public Task createTask(Task task) {

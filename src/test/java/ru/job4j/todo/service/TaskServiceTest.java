@@ -5,7 +5,7 @@ import org.junit.jupiter.api.Test;
 import ru.job4j.todo.exception.TaskNotFoundException;
 import ru.job4j.todo.exception.TaskUpdateException;
 import ru.job4j.todo.model.Task;
-import ru.job4j.todo.repository.TaskRepository;
+import ru.job4j.todo.store.TaskStore;
 
 import java.time.LocalDateTime;
 import java.util.List;
@@ -19,11 +19,11 @@ import static org.mockito.Mockito.when;
 
 class TaskServiceTest {
     private static TaskService taskService;
-    private TaskRepository repository;
+    private TaskStore repository;
 
     @BeforeEach
     void setUp() {
-        repository = mock(TaskRepository.class);
+        repository = mock(TaskStore.class);
         taskService = new TaskService(repository);
     }
 

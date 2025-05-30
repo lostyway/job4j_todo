@@ -118,4 +118,18 @@ public class TaskController {
             return "/errors/404";
         }
     }
+
+    @GetMapping("/completed")
+    public String listTasksOfCompleted(Model model) {
+        List<Task> tasks = taskService.getTaskByCompleted(true);
+        model.addAttribute("tasks", tasks);
+        return "list";
+    }
+
+    @GetMapping("/new")
+    public String listNewTasks(Model model) {
+        List<Task> tasks = taskService.getTaskByCompleted(false);
+        model.addAttribute("tasks", tasks);
+        return "list";
+    }
 }

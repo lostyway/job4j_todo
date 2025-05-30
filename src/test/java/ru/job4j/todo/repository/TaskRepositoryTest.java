@@ -6,6 +6,8 @@ import org.hibernate.Transaction;
 import org.hibernate.cfg.Configuration;
 import org.junit.jupiter.api.*;
 import ru.job4j.todo.model.Task;
+import ru.job4j.todo.store.TaskStore;
+import ru.job4j.todo.utils.TransactionUtility;
 
 import java.util.List;
 import java.util.Optional;
@@ -13,7 +15,7 @@ import java.util.Optional;
 import static org.assertj.core.api.Assertions.assertThat;
 
 class TaskRepositoryTest {
-    private static TaskRepository repository;
+    private static TaskStore repository;
     private static SessionFactory sf;
 
     @AfterAll
@@ -34,7 +36,8 @@ class TaskRepositoryTest {
     @BeforeAll
     static void setUp() {
         sf = new Configuration().configure().buildSessionFactory();
-        repository = new TaskRepository(sf);
+        TransactionUtility tx = new TransactionUtility(sf);
+        repository = new TaskStore(tx);
     }
 
     @BeforeEach
