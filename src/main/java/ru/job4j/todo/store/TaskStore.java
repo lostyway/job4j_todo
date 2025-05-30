@@ -4,6 +4,7 @@ import lombok.AllArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.stereotype.Repository;
 import ru.job4j.todo.model.Task;
+import ru.job4j.todo.model.User;
 import ru.job4j.todo.utils.TransactionUtility;
 
 import java.util.List;
@@ -67,8 +68,25 @@ public class TaskStore implements ITaskStore {
     @Override
     public List<Task> getAllTaskByCompletable(Boolean completed) {
         return tx.txResult(session ->
-                session.createQuery("from Task where completed = :completed order by created desc", Task.class)
+                session.createQuery("from Task where completed = :completed  order by created desc", Task.class)
                         .setParameter("completed", completed)
+                        .list());
+    }
+
+    @Override
+    public List<Task> getAllUserTask(User user) {
+        return tx.txResult(session
+                -> session.createQuery("from Task where user = :user order by created desc", Task.class)
+                .setParameter("user", user)
+                .list());
+    }
+
+    @Override
+    public List<Task> getAllUserTaskByCompletable(User user, Boolean completed) {
+        return tx.txResult(session ->
+                session.createQuery("from Task where completed = :completed and user = :user order by created desc", Task.class)
+                        .setParameter("completed", completed)
+                        .setParameter("user", user)
                         .list());
     }
 }

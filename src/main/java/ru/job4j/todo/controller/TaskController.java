@@ -7,6 +7,7 @@ import org.springframework.web.bind.annotation.*;
 import ru.job4j.todo.exception.TaskNotFoundException;
 import ru.job4j.todo.exception.TaskUpdateException;
 import ru.job4j.todo.model.Task;
+import ru.job4j.todo.model.User;
 import ru.job4j.todo.service.TaskService;
 
 import java.util.List;
@@ -18,8 +19,8 @@ public class TaskController {
     private final TaskService taskService;
 
     @GetMapping
-    public String tasks(Model model) {
-        List<Task> tasks = taskService.getAllTasks();
+    public String tasks(Model model, @SessionAttribute User user) {
+        List<Task> tasks = taskService.getUserAllTasks(user);
         model.addAttribute("tasks", tasks);
         return "list";
     }
@@ -31,9 +32,10 @@ public class TaskController {
     }
 
     @PostMapping("/add")
-    public String create(@ModelAttribute Task task, Model model) {
+    public String create(@ModelAttribute Task task, @SessionAttribute User user, Model model) {
         try {
-            Task savedTask = taskService.createTask(task);
+            task.setUser(user);
+            taskService.createTask(task);
             return "redirect:/tasks";
         } catch (TaskUpdateException e) {
             model.addAttribute("error", e.getMessage());
@@ -120,15 +122,15 @@ public class TaskController {
     }
 
     @GetMapping("/completed")
-    public String listTasksOfCompleted(Model model) {
-        List<Task> tasks = taskService.getTaskByCompleted(true);
+    public String listTasksOfCompleted(Model model, @SessionAttribute User user) {
+        List<Task> tasks = taskService.getUserTaskByCompleted(user, true);
         model.addAttribute("tasks", tasks);
         return "list";
     }
 
     @GetMapping("/new")
-    public String listNewTasks(Model model) {
-        List<Task> tasks = taskService.getTaskByCompleted(false);
+    public String listNewTasks(Model model, @SessionAttribute User user) {
+        List<Task> tasks = taskService.getUserTaskByCompleted(user, false);
         model.addAttribute("tasks", tasks);
         return "list";
     }

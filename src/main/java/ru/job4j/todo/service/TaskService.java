@@ -5,6 +5,7 @@ import org.springframework.stereotype.Service;
 import ru.job4j.todo.exception.TaskNotFoundException;
 import ru.job4j.todo.exception.TaskUpdateException;
 import ru.job4j.todo.model.Task;
+import ru.job4j.todo.model.User;
 import ru.job4j.todo.store.ITaskStore;
 
 import java.util.List;
@@ -46,6 +47,16 @@ public class TaskService implements ITaskService {
     @Override
     public List<Task> getTaskByCompleted(Boolean completed) {
         return taskRepository.getAllTaskByCompletable(completed);
+    }
+
+    @Override
+    public List<Task> getUserTaskByCompleted(User user, Boolean completed) {
+        return taskRepository.getAllUserTaskByCompletable(user, completed);
+    }
+
+    @Override
+    public List<Task> getUserAllTasks(User user) {
+        return taskRepository.getAllUserTask(user);
     }
 
     @Override
