@@ -11,6 +11,7 @@
     <h2>Список задач</h2>
     <a class="btn btn-primary mb-3" th:href="@{/tasks/create}">Добавить задачу</a>
     <div class="mb-3">
+        <td th:text="${user.name}">Пользователь</td>
         <a class="btn btn-outline-secondary me-2" th:href="@{/tasks}">Все</a>
         <a class="btn btn-outline-success me-2" th:href="@{/tasks/completed}">Выполненные</a>
         <a class="btn btn-outline-primary" th:href="@{/tasks/new}">Новые</a>
@@ -43,9 +44,7 @@
                 </form>
             </td>
         </tr>
-        <td th:text="${user.name}">Пользователь</td>
         </tbody>
-
     </table>
 </div>
 <footer th:include="fragments/footer :: footer"></footer>

@@ -36,7 +36,6 @@ public class UserController {
         try {
             User userToLogin = userService.findByLoginAndPassword(user.getLogin(), user.getPassword());
             request.getSession().setAttribute("user", userToLogin);
-            request.getSession().setAttribute("userId", userToLogin.getId());
             return "redirect:/tasks";
         } catch (IllegalArgumentException | UserNotFoundException e) {
             model.addAttribute("error", e.getMessage());
