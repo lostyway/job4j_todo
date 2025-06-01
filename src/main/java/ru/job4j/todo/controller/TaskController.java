@@ -6,6 +6,7 @@ import org.springframework.ui.Model;
 import org.springframework.web.bind.annotation.*;
 import ru.job4j.todo.exception.TaskNotFoundException;
 import ru.job4j.todo.exception.TaskUpdateException;
+import ru.job4j.todo.model.Priority;
 import ru.job4j.todo.model.Task;
 import ru.job4j.todo.model.User;
 import ru.job4j.todo.service.PriorityService;
@@ -36,9 +37,10 @@ public class TaskController {
     }
 
     @PostMapping("/add")
-    public String create(@ModelAttribute Task task, @SessionAttribute User user, Model model) {
+    public String create(@ModelAttribute Task task, @RequestParam("priority.id") int priority, @SessionAttribute User user, Model model) {
         try {
             task.setUser(user);
+            task.setPriority(priorityService.findById(priority));
             taskService.createTask(task);
             return "redirect:/tasks";
         } catch (TaskUpdateException e) {

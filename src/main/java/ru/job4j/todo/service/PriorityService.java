@@ -18,8 +18,14 @@ public class PriorityService implements IPriorityService {
     public List<Priority> getPriorities() {
         var result = priorityStore.getPriorities();
         if (result.isEmpty()) {
-            throw new RuntimeException("No priority found");
+            throw new RuntimeException("Такой приоритет не найден");
         }
         return result;
+    }
+
+    @Override
+    public Priority findById(int priority) {
+        return priorityStore.getPriorityById(priority)
+                .orElseThrow(() -> new RuntimeException("Такой приоритет не найден"));
     }
 }

@@ -6,4 +6,6 @@ import java.util.List;
 
 public interface IPriorityService {
     List<Priority> getPriorities();
+
+    Priority findById(int priority);
 }

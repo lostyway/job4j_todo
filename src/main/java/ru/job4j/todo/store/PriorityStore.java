@@ -8,6 +8,7 @@ import ru.job4j.todo.model.Priority;
 import ru.job4j.todo.utils.TransactionUtility;
 
 import java.util.List;
+import java.util.Optional;
 
 @Slf4j
 @Repository
@@ -19,5 +20,12 @@ public class PriorityStore implements IPriorityStore {
     public List<Priority> getPriorities() {
         return tx.txResult(session
                 -> session.createQuery("from Priority", Priority.class).list());
+    }
+
+    @Override
+    public Optional<Priority> getPriorityById(int priority) {
+        return Optional.ofNullable(tx.txResult(session
+                        -> session.createQuery("from Priority where id = :id", Priority.class)
+                .setParameter("id", priority).getSingleResult()));
     }
 }
