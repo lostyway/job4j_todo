@@ -9,16 +9,19 @@ import java.time.ZoneId;
 @UtilityClass
 public class UserTimeZoneUtility {
 
-    public static Task changeTimeZone(Task task) {
-        User user = task.getUser();
-        ZoneId userZone = user != null
-                ? ZoneId.of(user.getTimezone())
-                : ZoneId.of("UTC");
-
+    public Task changeTimeZone(Task task) {
+        ZoneId userZone;
+        try {
+            User user = task.getUser();
+            userZone = user != null
+                    ? ZoneId.of(user.getTimezone())
+                    : ZoneId.of("UTC");
+        } catch (Exception e) {
+            userZone = ZoneId.of("UTC");
+        }
         task.setCreated(task.getCreated().
                 atZone(ZoneId.of("UTC"))
                 .withZoneSameInstant(userZone).toLocalDateTime());
-
         return task;
     }
 }
