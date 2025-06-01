@@ -12,6 +12,7 @@ import ru.job4j.todo.service.UserService;
 
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpSession;
+import java.time.ZoneId;
 
 @Slf4j
 @Controller
@@ -26,7 +27,8 @@ public class UserController {
     }
 
     @GetMapping("register")
-    public String getRegisterPage() {
+    public String getRegisterPage(Model model) {
+        model.addAttribute("zones", ZoneId.getAvailableZoneIds().stream().sorted().toList());
         return "user/register";
     }
 
