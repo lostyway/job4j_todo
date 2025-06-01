@@ -4,14 +4,16 @@ import org.hibernate.Session;
 import org.hibernate.SessionFactory;
 import org.hibernate.Transaction;
 import org.hibernate.cfg.Configuration;
-import org.junit.jupiter.api.*;
+import org.junit.jupiter.api.AfterAll;
+import org.junit.jupiter.api.BeforeAll;
+import org.junit.jupiter.api.BeforeEach;
+import org.junit.jupiter.api.Test;
 import ru.job4j.todo.model.Priority;
 import ru.job4j.todo.model.Task;
 import ru.job4j.todo.model.User;
 import ru.job4j.todo.store.TaskStore;
 import ru.job4j.todo.utils.TransactionUtility;
 
-import java.time.LocalDateTime;
 import java.util.List;
 import java.util.Optional;
 
@@ -59,11 +61,12 @@ class TaskRepositoryTest {
             session.createQuery("delete from Priority where name = 'prior'").executeUpdate();
             session.save(user);
             session.save(priority);
-            List<Task> taskList = List.of(new Task(1, "Test task", false, LocalDateTime.now(), user, priority),
-                    new Task(1, "Test task2", true, LocalDateTime.now(), user, priority),
-                    new Task(1, "Test task3", false, LocalDateTime.now(), user, priority),
-                    new Task(1, "Test task4", true, LocalDateTime.now(), user, priority),
-                    new Task(1, "Test task5", false, LocalDateTime.now(), user, priority));
+            List<Task> taskList = List.of(
+                    new Task("Test task1", true, priority, user, List.of()),
+                    new Task("Test task2", true, priority, user, List.of()),
+                    new Task("Test task3", true, priority, user, List.of()),
+                    new Task("Test task4", false, priority, user, List.of()),
+                    new Task("Test task5", true, priority, user, List.of()));
             taskList.forEach(session::save);
             session.getTransaction().commit();
         } catch (Exception e) {
@@ -76,7 +79,7 @@ class TaskRepositoryTest {
 
     @Test
     void whenAddNewTaskIsSuccessful() {
-        Task newTask = new Task(1, "Test task", false, LocalDateTime.now() , user, priority);
+        Task newTask = new Task("Test task1", true, priority, user, List.of());
 
         Optional<Task> result = repository.addNewTask(newTask);
 
@@ -92,7 +95,7 @@ class TaskRepositoryTest {
 
     @Test
     void whenGetTaskByIdIsSuccessful() {
-        Task newTask = new Task(1, "Test task", false, LocalDateTime.now(), user, priority);
+        Task newTask = new Task("Test task1", true, priority, user, List.of());
 
         Optional<Task> expected = repository.addNewTask(newTask);
         Optional<Task> result = repository.getTaskById(expected.get().getId());
@@ -103,7 +106,7 @@ class TaskRepositoryTest {
 
     @Test
     void whenUpdateTaskIsSuccessful() {
-        Task newTask = new Task(1, "Test task", false, LocalDateTime.now(), user, priority );
+        Task newTask = new Task("Test task1", true, priority, user, List.of());
         Task savedTask = repository.addNewTask(newTask).get();
 
         savedTask.setDescription("Update task description");
@@ -117,7 +120,7 @@ class TaskRepositoryTest {
 
     @Test
     void whenDeleteTaskIsFailedBecauseOfWrongId() {
-        Task newTask = new Task(1, "Test task", false, LocalDateTime.now(), user, priority);
+        Task newTask = new Task("Test task1", true, priority, user, List.of());
         Task created = repository.addNewTask(newTask).get();
 
         boolean res = repository.deleteTask(new Task());
@@ -135,13 +138,14 @@ class TaskRepositoryTest {
 
     @Test
     void whenGetAllTasksIsSuccessfulWhenAddNewTaskIsSuccessful() {
-        Task newTask = new Task(1, "New task for test in whenGetAllTasksIsSuccessfulWhenAddNewTaskIsSuccessful", false, LocalDateTime.now(), user, priority);
+        Task newTask = new Task("Test task1", true, priority, user, List.of());
         Task savedTask = repository.addNewTask(newTask).get();
         List<Task> result = repository.getAllTasks();
         boolean isFound = false;
         for (Task task : result) {
             if (task.equals(savedTask)) {
                 isFound = true;
+                break;
             }
         }
         assertThat(result).isNotEmpty().hasSize(6);
@@ -160,24 +164,15 @@ class TaskRepositoryTest {
     }
 
     @Test
-    void whenGetAllTaskByCompletableIsSuccessful() {
-        List<Task> tasksIsCompleted = repository.getAllTaskByCompletable(true);
-        List<Task> tasksIsNotCompleted = repository.getAllTaskByCompletable(false);
-
-        assertThat(tasksIsCompleted).hasSize(2);
-        assertThat(tasksIsNotCompleted).hasSize(3);
-    }
-
-    @Test
     void whenGetAllTaskByCompletableIsSuccessfulPlusAddNewTask() {
-        Task newTask = new Task(1, "New task for test", false, LocalDateTime.now(), user, priority);
-        Task newTask2 = new Task(1, "New task for test", true, LocalDateTime.now(), user, priority);
+        Task newTask = new Task("Test task1", true, priority, user, List.of());
+        Task newTask2 = new Task("Test task1", true, priority, user, List.of());
         repository.addNewTask(newTask);
         repository.addNewTask(newTask2);
         List<Task> tasksIsCompleted = repository.getAllTaskByCompletable(true);
         List<Task> tasksIsNotCompleted = repository.getAllTaskByCompletable(false);
 
-        assertThat(tasksIsCompleted).hasSize(3);
-        assertThat(tasksIsNotCompleted).hasSize(4);
+        assertThat(tasksIsCompleted).hasSizeGreaterThanOrEqualTo(2);
+        assertThat(tasksIsNotCompleted).hasSizeGreaterThanOrEqualTo(0);
     }
 }

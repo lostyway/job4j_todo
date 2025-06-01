@@ -24,4 +24,8 @@ public class Priority {
 
     private int position;
 
+    public Priority(String name, int position) {
+        this.name = name;
+        this.position = position;
+    }
 }

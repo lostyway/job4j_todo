@@ -23,6 +23,7 @@
             <th>Создана</th>
             <th>Выполнена</th>
             <th>Срочность</th>
+            <th>Категории</th>
             <th>Действия</th>
         </tr>
         </thead>
@@ -35,12 +36,16 @@
             </td>
             <td th:text="${task.priority.name}">Приоритет задачи</td>
             <td>
+        <span th:each="categ : ${task.categories}"
+              th:text="${categ.name + ' '}"
+              th:remove="tag">Категория </span>
+            </td>
+
+            <td>
                 <form th:action="@{'/tasks/done/' + ${task.id}}" method="post" style="display:inline">
                     <button type="submit" class="btn btn-sm btn-warning">Выполнено</button>
                 </form>
-
-                <a th:href="@{'/tasks/view/' + ${task.id}}" class="btn btn-sm btn-info">Посмотреть на задачу</a>
-
+                <a th:href="@{'/tasks/view/' + ${task.id}}" class="btn btn-sm btn-info">Посмотреть</a>
                 <form th:action="@{'/tasks/delete/' + ${task.id}}" method="post" style="display:inline">
                     <button type="submit" class="btn btn-sm btn-danger">Удалить</button>
                 </form>

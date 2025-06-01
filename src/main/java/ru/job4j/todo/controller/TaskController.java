@@ -4,13 +4,17 @@ import lombok.AllArgsConstructor;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
 import org.springframework.web.bind.annotation.*;
+import ru.job4j.todo.exception.CategoryNotFoundException;
 import ru.job4j.todo.exception.TaskNotFoundException;
 import ru.job4j.todo.exception.TaskUpdateException;
+import ru.job4j.todo.model.Category;
 import ru.job4j.todo.model.Task;
 import ru.job4j.todo.model.User;
+import ru.job4j.todo.service.CategoryService;
 import ru.job4j.todo.service.PriorityService;
 import ru.job4j.todo.service.TaskService;
 
+import java.util.ArrayList;
 import java.util.List;
 
 @Controller
@@ -19,6 +23,7 @@ import java.util.List;
 public class TaskController {
     private final TaskService taskService;
     private final PriorityService priorityService;
+    private final CategoryService categoryService;
 
     @GetMapping
     public String tasks(Model model, @SessionAttribute User user) {
@@ -29,19 +34,37 @@ public class TaskController {
 
     @GetMapping("/create")
     public String create(Model model) {
-        model.addAttribute("task", new Task());
-        model.addAttribute("priorities", priorityService.getPriorities());
-        return "create";
+        try {
+            model.addAttribute("task", new Task());
+            model.addAttribute("priorities", priorityService.getPriorities());
+            model.addAttribute("categories", categoryService.getCategories());
+            return "create";
+        } catch (CategoryNotFoundException e) {
+            model.addAttribute("error", e.getMessage());
+            return "errors/404";
+        } catch (Exception e) {
+            model.addAttribute("error", "Произошла непредвиденная ошибка");
+            return "/errors/404";
+        }
     }
 
     @PostMapping("/add")
-    public String create(@ModelAttribute Task task, @RequestParam("priority.id") int priority, @SessionAttribute User user, Model model) {
+    public String create(@ModelAttribute Task task, @RequestParam("priority.id") int priority,
+                         @RequestParam(required = false, name = "categoryIds") List<Integer> ids,
+                         @SessionAttribute User user, Model model) {
+
+        if (ids == null || ids.isEmpty()) {
+            model.addAttribute("error", "Нужно выбрать хотя бы одну категорию");
+            return "/errors/404";
+        }
+
         try {
             task.setUser(user);
             task.setPriority(priorityService.findById(priority));
+            task.setCategories(categoryService.getCategoriesByIds(ids));
             taskService.createTask(task);
             return "redirect:/tasks";
-        } catch (TaskUpdateException e) {
+        } catch (TaskUpdateException | CategoryNotFoundException e) {
             model.addAttribute("error", e.getMessage());
             return "/errors/404";
         } catch (Exception e) {
@@ -71,6 +94,7 @@ public class TaskController {
             Task task = taskService.getTaskById(id);
             model.addAttribute("task", task);
             model.addAttribute("priorities", priorityService.getPriorities());
+            model.addAttribute("categories", categoryService.getCategories());
             return "edit";
         } catch (TaskNotFoundException e) {
             model.addAttribute("error", e.getMessage());
@@ -82,8 +106,15 @@ public class TaskController {
     }
 
     @PostMapping("/update")
-    public String updateTask(@ModelAttribute Task task, Model model) {
+    public String updateTask(@ModelAttribute Task task,@RequestParam(required = false) List<Integer> categoryIds ,Model model) {
+        if (categoryIds == null || categoryIds.isEmpty()) {
+            model.addAttribute("error", "Нужно выбрать хотя бы одну категорию");
+            return "/errors/404";
+        }
+
         try {
+            List<Category> categories = categoryService.getCategoriesByIds(categoryIds);
+            task.setCategories(new ArrayList<>(categories));
             taskService.updateTask(task);
             return "redirect:/tasks";
         } catch (TaskUpdateException e) {

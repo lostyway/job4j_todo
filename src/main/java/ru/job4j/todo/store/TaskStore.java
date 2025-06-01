@@ -57,7 +57,7 @@ public class TaskStore implements ITaskStore {
     @Override
     public Optional<Task> getTaskById(int id) {
         return tx.txResult(session
-                -> Optional.ofNullable(session.createQuery("from Task t join fetch t.priority where t.id = :id", Task.class)
+                -> Optional.ofNullable(session.createQuery("select distinct t from Task t join fetch t.priority join fetch t.categories where t.id = :id", Task.class)
                 .setParameter("id", id)
                 .getSingleResult()));
     }
@@ -65,13 +65,13 @@ public class TaskStore implements ITaskStore {
     @Override
     public List<Task> getAllTasks() {
         return tx.txResult(session
-                -> session.createQuery("from Task t join fetch t.priority order by t.created desc", Task.class).list());
+                -> session.createQuery("select distinct t from Task t join fetch t.priority join fetch t.categories order by t.created desc", Task.class).list());
     }
 
     @Override
     public List<Task> getAllTaskByCompletable(Boolean completed) {
         return tx.txResult(session ->
-                session.createQuery("from Task t join fetch t.priority where t.completed = :completed  order by t.created desc", Task.class)
+                session.createQuery("select distinct t from Task t join fetch t.priority join fetch t.categories where t.completed = :completed  order by t.created desc", Task.class)
                         .setParameter("completed", completed)
                         .list());
     }
@@ -79,7 +79,7 @@ public class TaskStore implements ITaskStore {
     @Override
     public List<Task> getAllUserTask(User user) {
         return tx.txResult(session
-                -> session.createQuery("from Task t join fetch t.priority where t.user = :user order by t.created desc", Task.class)
+                -> session.createQuery("select distinct t from Task t join fetch t.priority join fetch t.categories where t.user = :user order by t.created desc", Task.class)
                 .setParameter("user", user)
                 .list());
     }
@@ -87,7 +87,7 @@ public class TaskStore implements ITaskStore {
     @Override
     public List<Task> getAllUserTaskByCompletable(User user, Boolean completed) {
         return tx.txResult(session ->
-                session.createQuery("from Task t join fetch t.priority where t.completed = :completed and t.user = :user order by t.created desc", Task.class)
+                session.createQuery("select distinct t from Task t join fetch t.priority join fetch t.categories where t.completed = :completed and t.user = :user order by t.created desc", Task.class)
                         .setParameter("completed", completed)
                         .setParameter("user", user)
                         .list());

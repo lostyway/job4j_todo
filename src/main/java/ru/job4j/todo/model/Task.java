@@ -4,6 +4,7 @@ import lombok.*;
 
 import javax.persistence.*;
 import java.time.LocalDateTime;
+import java.util.List;
 
 @Entity
 @Table(name = "tasks")
@@ -34,6 +35,13 @@ public class Task {
     @JoinColumn(name = "priority_id")
     private Priority priority;
 
+    @ManyToMany(fetch = FetchType.LAZY)
+    @JoinTable(name = "task_category",
+            joinColumns = {@JoinColumn(name = "task_id")},
+            inverseJoinColumns = {@JoinColumn(name = "category_id")}
+    )
+    private List<Category> categories;
+
     @PrePersist
     protected void onCreate() {
         created = LocalDateTime.now();
@@ -42,12 +50,11 @@ public class Task {
         }
     }
 
-    public Task(int id, String description, Boolean completed, LocalDateTime created) {
+    public Task(String description, Boolean completed, Priority priority, User user, List<Category> categories) {
         this.description = description;
         this.completed = completed;
-    }
-
-    public Task(String description) {
-        this.description = description;
+        this.priority = priority;
+        this.user = user;
+        this.categories = categories;
     }
 }
