@@ -6,12 +6,10 @@ import org.springframework.ui.Model;
 import org.springframework.web.bind.annotation.*;
 import ru.job4j.todo.exception.TaskNotFoundException;
 import ru.job4j.todo.exception.TaskUpdateException;
-import ru.job4j.todo.model.Priority;
 import ru.job4j.todo.model.Task;
 import ru.job4j.todo.model.User;
 import ru.job4j.todo.service.PriorityService;
 import ru.job4j.todo.service.TaskService;
-import ru.job4j.todo.service.UserService;
 
 import java.util.List;
 
@@ -72,6 +70,7 @@ public class TaskController {
         try {
             Task task = taskService.getTaskById(id);
             model.addAttribute("task", task);
+            model.addAttribute("priorities", priorityService.getPriorities());
             return "edit";
         } catch (TaskNotFoundException e) {
             model.addAttribute("error", e.getMessage());

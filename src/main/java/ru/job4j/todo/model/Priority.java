@@ -1,7 +1,9 @@
 package ru.job4j.todo.model;
 
+import lombok.AllArgsConstructor;
 import lombok.Data;
 import lombok.EqualsAndHashCode;
+import lombok.NoArgsConstructor;
 
 import javax.persistence.*;
 
@@ -9,6 +11,8 @@ import javax.persistence.*;
 @Entity
 @Table(name = "priorities")
 @EqualsAndHashCode(onlyExplicitlyIncluded = true)
+@AllArgsConstructor
+@NoArgsConstructor
 public class Priority {
 
     @Id
@@ -19,4 +23,5 @@ public class Priority {
     private String name;
 
     private int position;
+
 }

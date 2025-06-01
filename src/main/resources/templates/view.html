@@ -13,6 +13,7 @@
     <p><strong>Описание:</strong> <span th:text="${task.description}">Описание</span></p>
     <p><strong>Создано:</strong> <span th:text="${#temporals.format(task.created, 'dd-MM-yyyy HH:mm')}">Дата</span></p>
     <p><strong>Состояние:</strong> <span th:text="${task.completed ? 'Выполнено' : 'Новое'}">Статус</span></p>
+    <p><strong>Срочность:</strong> <span th:text="${task.priority.name}">Срочность</span></p>
 
     <div class="btn-group">
         <form th:action="@{|/tasks/done/${task.id}|}" method="post">

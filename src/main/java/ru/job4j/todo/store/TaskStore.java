@@ -56,7 +56,10 @@ public class TaskStore implements ITaskStore {
 
     @Override
     public Optional<Task> getTaskById(int id) {
-        return tx.txResult(session -> Optional.ofNullable(session.get(Task.class, id)));
+        return tx.txResult(session
+                -> Optional.ofNullable(session.createQuery("from Task t join fetch t.priority where t.id = :id", Task.class)
+                .setParameter("id", id)
+                .getSingleResult()));
     }
 
     @Override
