@@ -3,7 +3,10 @@ package ru.job4j.todo.model;
 import lombok.*;
 
 import javax.persistence.*;
+import java.time.Instant;
 import java.time.LocalDateTime;
+import java.time.ZoneId;
+import java.time.ZoneOffset;
 import java.util.List;
 
 @Entity
@@ -44,7 +47,7 @@ public class Task {
 
     @PrePersist
     protected void onCreate() {
-        created = LocalDateTime.now();
+        created = LocalDateTime.ofInstant(Instant.now(), ZoneOffset.UTC);
         if (completed == null) {
             completed = false;
         }

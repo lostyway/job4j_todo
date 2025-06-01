@@ -8,6 +8,7 @@ import ru.job4j.todo.model.Task;
 import ru.job4j.todo.model.User;
 import ru.job4j.todo.store.ITaskStore;
 
+import java.time.ZoneId;
 import java.util.List;
 
 @Service
@@ -56,7 +57,13 @@ public class TaskService implements ITaskService {
 
     @Override
     public List<Task> getUserAllTasks(User user) {
-        return taskRepository.getAllUserTask(user);
+        List<Task> tasks = taskRepository.getAllUserTask(user);
+        for (Task task : tasks) {
+            task.setCreated(task.getCreated()
+                    .atZone(ZoneId.of("UTC"))
+                    .withZoneSameInstant(ZoneId.of(user.getTimezone())).toLocalDateTime());
+        }
+        return tasks;
     }
 
     @Override
