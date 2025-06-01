@@ -8,7 +8,9 @@ import ru.job4j.todo.exception.TaskNotFoundException;
 import ru.job4j.todo.exception.TaskUpdateException;
 import ru.job4j.todo.model.Task;
 import ru.job4j.todo.model.User;
+import ru.job4j.todo.service.PriorityService;
 import ru.job4j.todo.service.TaskService;
+import ru.job4j.todo.service.UserService;
 
 import java.util.List;
 
@@ -17,6 +19,7 @@ import java.util.List;
 @AllArgsConstructor
 public class TaskController {
     private final TaskService taskService;
+    private final PriorityService priorityService;
 
     @GetMapping
     public String tasks(Model model, @SessionAttribute User user) {
@@ -28,6 +31,7 @@ public class TaskController {
     @GetMapping("/create")
     public String create(Model model) {
         model.addAttribute("task", new Task());
+        model.addAttribute("priorities", priorityService.getPriorities());
         return "create";
     }
 

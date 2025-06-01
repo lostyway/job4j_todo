@@ -28,6 +28,7 @@
         <tbody>
         <tr th:each="task : ${tasks}">
             <td th:text="${task.description}">Описание</td>
+            <td th:text="${task.priority}">Приоритет задачи</td>
             <td th:text="${#temporals.format(task.created, 'dd.MM.yyyy HH:mm')}">Дата</td>
             <td>
                 <span th:text="${task.completed == true} ? 'Да' : 'Нет'"></span>

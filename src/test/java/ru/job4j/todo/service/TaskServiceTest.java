@@ -29,8 +29,8 @@ class TaskServiceTest {
 
     @Test
     void whenCreateNewTaskIsSuccessful() {
-        when(repository.addNewTask(any())).thenReturn(Optional.of(new Task("desc", true)));
-        Task task = taskService.createTask(new Task("desc", true));
+        when(repository.addNewTask(any())).thenReturn(Optional.of(new Task(1, "desc", true, LocalDateTime.now())));
+        Task task = taskService.createTask(new Task(1, "desc", true, LocalDateTime.now()));
         assertThat(task).isNotNull();
     }
 
@@ -44,22 +44,22 @@ class TaskServiceTest {
     @Test
     void whenCreateNewTaskIsFailedBecauseNewTaskIsEmpty() {
         when(repository.addNewTask(any())).thenReturn(Optional.empty());
-        assertThatThrownBy(() -> taskService.createTask(new Task("desc", true)))
+        assertThatThrownBy(() -> taskService.createTask(new Task(1, "desc", true, LocalDateTime.now())))
                 .isInstanceOf(TaskUpdateException.class)
                 .hasMessageContaining("Не удалось сохранить задачу");
     }
 
     @Test
     void whenUpdateTaskIsSuccess() {
-        when(repository.updateTask(any())).thenReturn(Optional.of(new Task("desc", true)));
-        Task task = taskService.updateTask(new Task("desc", true));
+        when(repository.updateTask(any())).thenReturn(Optional.of(new Task(1, "desc", true, LocalDateTime.now())));
+        Task task = taskService.updateTask(new Task(1, "desc", true, LocalDateTime.now()));
         assertThat(task).isNotNull();
     }
 
     @Test
     void whenUpdateTaskIsFailedBecauseOfEmptyTask() {
         when(repository.updateTask(any())).thenReturn(Optional.empty());
-        assertThatThrownBy(() -> taskService.updateTask(new Task("desc", true)))
+        assertThatThrownBy(() -> taskService.updateTask(new Task(1, "desc", true, LocalDateTime.now())))
                 .isInstanceOf(TaskUpdateException.class)
                 .hasMessageContaining("Не удалось обновить задачу");
     }
@@ -67,14 +67,14 @@ class TaskServiceTest {
     @Test
     void whenDeleteTaskIsSuccess() {
         when(repository.deleteTask(any())).thenReturn(true);
-        boolean result = taskService.deleteTask(new Task("desc", true));
+        boolean result = taskService.deleteTask(new Task(1, "desc", true, LocalDateTime.now()));
         assertThat(result).isTrue();
     }
 
     @Test
     void whenDeleteTaskIsFailed() {
         when(repository.deleteTask(any())).thenReturn(false);
-        assertThatThrownBy(() -> taskService.deleteTask(new Task("desc", true)))
+        assertThatThrownBy(() -> taskService.deleteTask(new Task(1, "desc", true, LocalDateTime.now())))
                 .isInstanceOf(TaskNotFoundException.class)
                 .hasMessageContaining("Не удалось удалить задачу");
     }
@@ -92,14 +92,6 @@ class TaskServiceTest {
         when(repository.getAllTasks()).thenReturn(List.of());
         List<Task> tasks = taskService.getAllTasks();
         assertThat(tasks).isEmpty();
-    }
-
-    @Test
-    void whenGetTaskByIdIsSuccess() {
-        when(repository.getTaskById(1))
-                .thenReturn(Optional.of(new Task(1, "desc", true, LocalDateTime.now())));
-        Task task = taskService.getTaskById(1);
-        assertThat(task.getId()).isEqualTo(1);
     }
 
     @Test

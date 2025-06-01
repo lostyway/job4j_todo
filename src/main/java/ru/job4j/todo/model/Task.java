@@ -30,6 +30,10 @@ public class Task {
     @JoinColumn(name = "user_id")
     private User user;
 
+    @ManyToOne(fetch = FetchType.LAZY)
+    @JoinColumn(name = "priority_id")
+    private Priority priority;
+
     @PrePersist
     protected void onCreate() {
         created = LocalDateTime.now();
@@ -38,7 +42,7 @@ public class Task {
         }
     }
 
-    public Task(String description, Boolean completed) {
+    public Task(int id, String description, Boolean completed, LocalDateTime created) {
         this.description = description;
         this.completed = completed;
     }

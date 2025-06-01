@@ -9,6 +9,7 @@ import ru.job4j.todo.model.Task;
 import ru.job4j.todo.store.TaskStore;
 import ru.job4j.todo.utils.TransactionUtility;
 
+import java.time.LocalDateTime;
 import java.util.List;
 import java.util.Optional;
 
@@ -46,11 +47,11 @@ class TaskRepositoryTest {
         try (Session session = sf.openSession()) {
             tx = session.beginTransaction();
             session.createQuery("delete from Task").executeUpdate();
-            List<Task> taskList = List.of(new Task("Test task", false),
-                    new Task("Test task2", true),
-                    new Task("Test task3", false),
-                    new Task("Test task4", true),
-                    new Task("Test task5", false));
+            List<Task> taskList = List.of(new Task(1, "Test task", false, LocalDateTime.now()),
+                    new Task(1, "Test task2", true, LocalDateTime.now()),
+                    new Task(1, "Test task3", false, LocalDateTime.now()),
+                    new Task(1, "Test task4", true, LocalDateTime.now()),
+                    new Task(1, "Test task5", false, LocalDateTime.now()));
             taskList.forEach(session::save);
             session.getTransaction().commit();
         } catch (Exception e) {
@@ -63,7 +64,7 @@ class TaskRepositoryTest {
 
     @Test
     void whenAddNewTaskIsSuccessful() {
-        Task newTask = new Task("Test task", false);
+        Task newTask = new Task(1, "Test task", false, LocalDateTime.now());
 
         Optional<Task> result = repository.addNewTask(newTask);
 
@@ -79,7 +80,7 @@ class TaskRepositoryTest {
 
     @Test
     void whenGetTaskByIdIsSuccessful() {
-        Task newTask = new Task("Test task", false);
+        Task newTask = new Task(1, "Test task", false, LocalDateTime.now());
 
         Optional<Task> expected = repository.addNewTask(newTask);
         Optional<Task> result = repository.getTaskById(expected.get().getId());
@@ -90,7 +91,7 @@ class TaskRepositoryTest {
 
     @Test
     void whenUpdateTaskIsSuccessful() {
-        Task newTask = new Task("Test task", false);
+        Task newTask = new Task(1, "Test task", false, LocalDateTime.now());
         Task savedTask = repository.addNewTask(newTask).get();
 
         savedTask.setDescription("Update task description");
@@ -104,8 +105,8 @@ class TaskRepositoryTest {
 
     @Test
     void whenUpdateTaskIsFailedBecauseOfWrongId() {
-        Task newTask = new Task("Test task", false);
-        Task savedTask = new Task(newTask.getDescription(), false);
+        Task newTask = new Task(1, "Test task", false, LocalDateTime.now());
+        Task savedTask = new Task(1, newTask.getDescription(), false, LocalDateTime.now());
 
         Optional<Task> result = repository.updateTask(savedTask);
 
@@ -114,7 +115,7 @@ class TaskRepositoryTest {
 
     @Test
     void whenDeleteTaskIsSuccessful() {
-        Task newTask = new Task("Test task", false);
+        Task newTask = new Task(1, "Test task", false, LocalDateTime.now());
         Task created = repository.addNewTask(newTask).get();
 
         boolean res = repository.deleteTask(created);
@@ -126,7 +127,7 @@ class TaskRepositoryTest {
 
     @Test
     void whenDeleteTaskIsFailedBecauseOfWrongId() {
-        Task newTask = new Task("Test task", false);
+        Task newTask = new Task(1, "Test task", false, LocalDateTime.now());
         Task created = repository.addNewTask(newTask).get();
 
         boolean res = repository.deleteTask(new Task());
@@ -144,7 +145,7 @@ class TaskRepositoryTest {
 
     @Test
     void whenGetAllTasksIsSuccessfulWhenAddNewTaskIsSuccessful() {
-        Task newTask = new Task("New task for test in whenGetAllTasksIsSuccessfulWhenAddNewTaskIsSuccessful", false);
+        Task newTask = new Task(1, "New task for test in whenGetAllTasksIsSuccessfulWhenAddNewTaskIsSuccessful", false, LocalDateTime.now());
         Task savedTask = repository.addNewTask(newTask).get();
         List<Task> result = repository.getAllTasks();
         boolean isFound = false;
@@ -179,8 +180,8 @@ class TaskRepositoryTest {
 
     @Test
     void whenGetAllTaskByCompletableIsSuccessfulPlusAddNewTask() {
-        Task newTask = new Task("New task for test", false);
-        Task newTask2 = new Task("New task for test", true);
+        Task newTask = new Task(1, "New task for test", false, LocalDateTime.now());
+        Task newTask2 = new Task(1, "New task for test", true, LocalDateTime.now());
         repository.addNewTask(newTask);
         repository.addNewTask(newTask2);
         List<Task> tasksIsCompleted = repository.getAllTaskByCompletable(true);
